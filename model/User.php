@@ -31,9 +31,9 @@ class User {
  * @param  string password
  * @return string encrypted password
  */
-	public function encrypt_password($password) {
+	public function encrypt_password($username, $password) {
 		global $secret;
-		$password = $password . $secret;
+		$password = $password . $secret . $username;
 		return md5($password);
 	}
 
@@ -42,7 +42,7 @@ class User {
 		mysql_connect($db_config['host'], $db_config['username'], $db_config['password']) or die(mysql_error());
 		mysql_select_db($db_config['name']) or die(mysql_error());
 
-		$encrypted_password = $this->encrypt_password($this->_password);
+		$encrypted_password = $this->encrypt_password($this->_password, $this->_username);
 		$query = "INSERT INTO users (username, password, email, promo_code, created) VALUES('{$this->_username}', '{$encrypted_password}', '{$this->_email}', '{$this->_promo_code}', NOW())";
 		mysql_query($query) or die(mysql_error());
 
