@@ -43,10 +43,15 @@ class User {
 		mysql_select_db($db_config['name']) or die(mysql_error());
 
 		$encrypted_password = $this->encrypt_password($this->_password);
-		$query = "INSERT INTO users (username, password, email, promo_code) VALUES('{$this->_username}', '{$encrypted_password}', '{$this->_email}', '{$this->_promo_code}')";
+		$query = "INSERT INTO users (username, password, email, promo_code, created) VALUES('{$this->_username}', '{$encrypted_password}', '{$this->_email}', '{$this->_promo_code}', NOW())";
 		mysql_query($query) or die(mysql_error());
 
-		return 'success';
+		$query = "SELECT id FROM users ORDER BY id DESC";
+		$result = mysql_query($query) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+
+		return $row['id'];
+		// return 'success';
 	}
 }
 ?>
